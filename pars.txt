@@ -1,0 +1,17 @@
+# consistant genome wide metabolic model.
+consModel = './data/consistRecon2_v3.mat';
+
+# nutrition uptake file 
+exchangeFile = './data/exchange_rxns_blood_muscle.txt';
+
+# expression file
+expressionFile = './data/TCGA_lung.txt';
+
+# cutoff expression
+cutoff = '75';
+
+# if perferm mcmc, ON/OFF default is OFF 
+ismcmc = 'OFF'
+
+# number of threadings for personalized metabolic modeling 
+cpu = '4';
