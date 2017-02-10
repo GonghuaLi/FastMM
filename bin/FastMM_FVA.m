@@ -1,4 +1,4 @@
-function flux = FastKO_FVA(model)
+function flux = FastMM_FVA(model)
 t = clock;
 c = ['fva',num2str(ceil(rand(1,1)*1000)),num2str(ceil(t(6)*100))];
 cout = [c,'.txt'];

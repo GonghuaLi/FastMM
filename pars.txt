@@ -5,12 +5,12 @@ consModel = './data/consistRecon2_v3.mat';
 exchangeFile = './data/exchange_rxns_blood_muscle.txt';
 
 # expression file
-expressionFile = './data/TCGA_lung.txt';
+expressionFile = './data/TCGA_lung_test.txt';
 
 # cutoff expression
 cutoff = '75';
 
-# if perferm mcmc, ON/OFF default is OFF 
+# perform mcmc?, ON/OFF default is OFF 
 ismcmc = 'OFF'
 
 # number of threadings for personalized metabolic modeling 

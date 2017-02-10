@@ -1,4 +1,4 @@
-function flux = FastKO_singleGeneKO(model)
+function flux = FastMM_singleGeneKO(model)
 t = clock;
 c = ['singleGeneKO',num2str(ceil(rand(1,1)*1000)),num2str(ceil(t(6)*100))];
 cout = [c,'.txt'];
