@@ -18,10 +18,12 @@ and MCMC sampling.
 
 ***FastMM*** is ***60~380 times faster*** than COBRA 2.0 in performing flux variability analysis and knockout analysis and returns consistent results. When applied to MCMC sampling, ***FastMM*** is also ***10~15 times faster*** than COBRA 2.0. 
 
-## Dependancy:
-1. opencobra
-2. gurobi
-3. cplex
+## Dependency:
+1). Install MATLAB. MATLAB is the software environment for engineers and scientists. You can get detailed installation information by visiting http://www.mathworks.com/products/matlab/
+2). Install Cobra toolbox in Matlab.  Cobra toolbox is a matlab toolbox that used to implement metabolic modeling. Users can download and install this toolbox from:  https://opencobra.github.io/cobratoolbox/
+3). Install Gurobi optimizer MATLAB interface. Please download and install the latest Gurobi optimizer and set MATLAB interface. Users can download and install this toolbox from:  https://www.gurobi.com/
+4). Install Cplex optimizer MATLAB interface. Users can download the cplex from http://www-01.ibm.com/software/websphere/products/optimization/cplex-studio-community-edition/
+
 
 ## Installation
 To install FastMM, users just download FastMM and type the following command in matlab/Octave:
