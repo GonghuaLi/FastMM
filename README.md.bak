@@ -19,7 +19,7 @@ and MCMC sampling.
 ***FastMM*** is ***60~380 times faster*** than COBRA 2.0 in performing flux variability analysis and knockout analysis and returns consistent results. When applied to MCMC sampling, ***FastMM*** is also ***10~15 times faster*** than COBRA 2.0. 
 
 ## Dependency:
-***The core programs of FastMM are independent, howerver, the matlab interface is dependent by the following software/toolbox:**
+***The FastMM itself is independent, howerver, the matlab interface is dependent by the following software/toolbox:**
 
 **1).** Install MATLAB. MATLAB is the software environment for engineers and scientists. You can get detailed installation information by visiting http://www.mathworks.com/products/matlab/
 

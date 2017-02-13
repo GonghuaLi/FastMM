@@ -1,0 +1,3 @@
+EX_succ(e)
+BiomassEcoli
+EX_nh4(e)
