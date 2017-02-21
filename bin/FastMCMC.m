@@ -36,7 +36,7 @@ end
 if length(outfile)>4 && strcmpi(outfile(end-3:end),'.mat')
     cout = outfile;
 else
-    cout = [cout,'.mat'];
+    cout = [outfile,'.mat'];
 end
 cobra2mps(inmodel,cmps);
 

@@ -2,7 +2,8 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
-#include <glpk.h>
+#include "gurobi_c.h"
+//#include <glpk.h>
 #include <time.h>
 #include <FastKO.h>
 
@@ -33,7 +34,7 @@ int help()
 int main(int argc,char **argv)
 { 
 	int i,j,k,m,n,s,num_gen,num_rxns,*is_expr, *changedRxns,contrlputs =0;
-	int numRxns,*coltype,is_constraint=0,is_objf=0;
+	int error, numMets,numRxns,*coltype,is_constraint=0,is_objf=0;
 	double duration,type;
 	double *lb,*ub;
 	char buf[2048],objfile[300],outputfile[300],optimizeType[100],constraintfile[300];
@@ -41,8 +42,10 @@ int main(int argc,char **argv)
     clock_t start, finish;
 	start = clock();
 
-	glp_prob *P;
-    glp_smcp parm;
+	//glp_prob *P;
+    //glp_smcp parm;
+	GRBenv   *env   = NULL,*modelenv = NULL;
+	GRBmodel *model = NULL;
 
 	CFluxFile *inModelFile,*outModelFile;
 	FILE *fin, *fout;
@@ -84,12 +87,22 @@ int main(int argc,char **argv)
 	fclose(fin);
 	num_gen = i;
 
-	P = glp_create_prob();
-	glp_read_mps(P, GLP_MPS_DECK, NULL, inModelFile->mps);
-	glp_adv_basis(P, 0);
-    glp_init_smcp(&parm);
-    parm.msg_lev = GLP_MSG_OFF;
-	numRxns = glp_get_num_cols(P);
+	//P = glp_create_prob();
+	//glp_read_mps(P, GLP_MPS_DECK, NULL, inModelFile->mps);
+	//glp_adv_basis(P, 0);
+    //glp_init_smcp(&parm);
+    //parm.msg_lev = GLP_MSG_OFF;
+	//numRxns = glp_get_num_cols(P);
+	error = GRBloadenv(&env, "");
+	error = GRBsetintparam(env, GRB_INT_PAR_LOGTOCONSOLE, 0);
+	error = GRBsetintparam(env, "Method", 0);
+	error = GRBreadmodel(env, inModelFile->mps, &model);
+
+	if (error){printf("Error reading model\n\n");exit(1);}
+	//error = GRBsetdblparam(GRBgetenv(model), "LogToConsole", 0);
+    	
+	error = GRBgetintattr(model,GRB_INT_ATTR_NUMCONSTRS, &numMets);
+	error = GRBgetintattr(model,GRB_INT_ATTR_NUMVARS, &numRxns);
 
 	//read objective function file
 	int *obj,num_obj;
@@ -113,16 +126,23 @@ int main(int argc,char **argv)
 
 	printf("FastMM:doubleGeneKO: Number of objective function is %d\n",num_obj);
 
+
+	error = GRBgetdblattrarray(model, GRB_DBL_ATTR_LB,0,numRxns,lb);
+	error = GRBgetdblattrarray(model, GRB_DBL_ATTR_UB,0,numRxns,ub);
+
 	lb = (double *)malloc((numRxns+1)*sizeof(double));
 	ub = (double *)malloc((numRxns+1)*sizeof(double));
 	coltype = (int *)malloc((numRxns+1)*sizeof(int));
 
-	for (i = 0;i<numRxns ;i++ ) 
-	{
-		lb[i] = glp_get_col_lb(P,i+1);
-		ub[i] = glp_get_col_ub(P,i+1);
-		coltype[i] = glp_get_col_type(P,i+1);
-	}
+	error = GRBgetdblattrarray(model, GRB_DBL_ATTR_LB,0,numRxns,lb);
+	error = GRBgetdblattrarray(model, GRB_DBL_ATTR_UB,0,numRxns,ub);
+
+	//for (i = 0;i<numRxns ;i++ ) 
+	//{
+	//	lb[i] = glp_get_col_lb(P,i+1);
+	//	ub[i] = glp_get_col_ub(P,i+1);
+	//	coltype[i] = glp_get_col_type(P,i+1);
+	//}
 
     rules = malloc2c(numRxns+1,2048);
 
@@ -131,7 +151,7 @@ int main(int argc,char **argv)
 	//read constraintfile
 	int *constraint,num_constraint=0;
 	char cts[300];
-	double *constraint_cutoff;
+	double *constraint_cutoff,tmpval;
 	constraint = (int *)malloc((numRxns+1)*sizeof(int));
 	constraint_cutoff = (double *)malloc((numRxns+1)*sizeof(double));
 	if (is_constraint>0)
@@ -156,27 +176,33 @@ int main(int argc,char **argv)
 
 		for (i = 0;i<num_constraint ;i++ )
 		{
-			glp_set_obj_coef(P,constraint[i],-1.0);
-			glp_simplex(P, &parm);
-			constraint_cutoff[i] = -1.0*glp_get_obj_val(P)*constraint_cutoff[i];
-			glp_set_obj_coef(P,constraint[i],0);
+			error = GRBsetdblattrelement(model, GRB_DBL_ATTR_OBJ, constraint[i]-1, 1.0);
+		    error = GRBsetintattr(model, GRB_INT_ATTR_MODELSENSE, GRB_MAXIMIZE);
+			error = GRBoptimize(model);
+			error = GRBgetdblattr(model, GRB_DBL_ATTR_OBJVAL, &tmpval);
+			//glp_set_obj_coef(P,constraint[i],-1.0);
+			//glp_simplex(P, &parm);
+			constraint_cutoff[i] = 1.0*tmpval*constraint_cutoff[i];
+			error = GRBsetdblattrelement(model, GRB_DBL_ATTR_OBJ, constraint[i]-1, 0.0);
+			//glp_set_obj_coef(P,constraint[i],0);
 
 		}
 		for (i = 0;i<num_constraint ;i++ )
 		{
 			if (constraint_cutoff[i]<ub[constraint[i]-1])
 			{
-				glp_set_col_bnds(P,constraint[i],coltype[constraint[i]-1],constraint_cutoff[i],ub[constraint[i]-1]);
+				GRBsetdblattrelement(model, GRB_DBL_ATTR_UB, constraint[i]-1, constraint_cutoff[i]);
+				//glp_set_col_bnds(P,constraint[i],coltype[constraint[i]-1],constraint_cutoff[i],ub[constraint[i]-1]);
 
-			}else
-			{
-				glp_set_col_bnds(P,constraint[i],GLP_FX,constraint_cutoff[i],constraint_cutoff[i]);
-			}
+			}//else
+			//{
+			//	glp_set_col_bnds(P,constraint[i],GLP_FX,constraint_cutoff[i],constraint_cutoff[i]);
+			//}
 		}
 	}
 
 	int *gene_effective,num_effective_genes,**iseffectiveRxns;
-	double tmp;
+	double tmp,*xval;
 	gene_effective = (int *)malloc((num_gen+1)*sizeof(int));
 	iseffectiveRxns = malloc2i(num_obj+1,numRxns+1);
 	//iseffectiveRxns = (int *)malloc((numRxns+1)*sizeof(int));
@@ -188,25 +214,37 @@ int main(int argc,char **argv)
     //no deletion
 	double *val_no_delet;
 	val_no_delet = (double *)malloc((num_obj+1)*sizeof(double));
+	xval = (double *)malloc((numRxns+1)*sizeof(double));
 	fprintf(fout,"0\t0");
 	for (i =0;i<num_obj ;i++ )
 	{
-		glp_set_obj_coef(P,obj[i],type);
-		glp_simplex(P, &parm);
-		val_no_delet[i] = type*glp_get_obj_val(P);
+		//glp_set_obj_coef(P,obj[i],type);
+		error = GRBsetdblattrelement(model, GRB_DBL_ATTR_OBJ, obj[i]-1, 1.0);
+		error = GRBsetintattr(model, GRB_INT_ATTR_MODELSENSE, type);
+		//glp_simplex(P, &parm);
+		error = GRBoptimize(model);
+		error = GRBgetdblattr(model, GRB_DBL_ATTR_OBJVAL, &tmpval);
+		printf("%.6f\n",tmpval);
+		//val_no_delet[i] = type*tmpval;
+		val_no_delet[i] = tmpval;
 		fprintf(fout,"\t%.6f",val_no_delet[i]);
+		error = GRBgetdblattrarray(model, GRB_DBL_ATTR_X, 0, numRxns, xval);
 		for (j =0 ;j<numRxns ;j++ )
 	    {
-		    tmp = glp_get_col_prim(P,j+1);
-		    if (ABS(tmp) <1e-9 )
+			//error = GRBsetdblattrelement(model, GRB_DBL_ATTR_X,j,tmp);
+			//printf("%i    %.6f\n",j,xval[j]);
+		    //tmp = glp_get_col_prim(P,j+1);
+		    if (ABS(xval[j]) <1e-9 )
 		    {
 			    iseffectiveRxns[i][j] = 0;
 		    }else
 		    {
+				//printf("%j    %.6f\n",j,tmpval);
 			    iseffectiveRxns[i][j] = 1;
 		    }
 	    }
-		glp_set_obj_coef(P,obj[i],0);
+		//glp_set_obj_coef(P,obj[i],0);
+		error = GRBsetdblattrelement(model, GRB_DBL_ATTR_OBJ, obj[i]-1, 0);
 	}
 	fprintf(fout,"\n");
 	
@@ -248,18 +286,28 @@ int main(int argc,char **argv)
 				    continue;
 			    }
 
-                glp_set_obj_coef(P,obj[s],type);
+                //glp_set_obj_coef(P,obj[s],type);
+				error = GRBsetdblattrelement(model, GRB_DBL_ATTR_OBJ, obj[s]-1, 1.0);
+				error = GRBsetintattr(model, GRB_INT_ATTR_MODELSENSE, type);
 				for (j = 0;j<n ;j++ ) {
-				    glp_set_col_bnds(P,changedRxns[j]+1,GLP_FX,0,0);
+					error = GRBsetdblattrelement(model, GRB_DBL_ATTR_LB,changedRxns[j],0);
+					error = GRBsetdblattrelement(model, GRB_DBL_ATTR_UB,changedRxns[j],0);
+				    //glp_set_col_bnds(P,changedRxns[j]+1,GLP_FX,0,0);
+
 			    }
-			    glp_simplex(P, &parm);
-			    single_delet_vals[s][i] = type*glp_get_obj_val(P);
-			    fprintf(fout,"\t%.6f",type*glp_get_obj_val(P));
+				error = GRBoptimize(model);
+				error = GRBgetdblattr(model, GRB_DBL_ATTR_OBJVAL, &tmpval);
+			    //glp_simplex(P, &parm);
+			    single_delet_vals[s][i] = tmpval;
+			    fprintf(fout,"\t%.6f",tmpval);
 			    //is_expr[i] = 1;
-			    for (j = 0;j<n ;j++ ) {			
-				    glp_set_col_bnds(P,changedRxns[j]+1,coltype[changedRxns[j]],lb[changedRxns[j]],ub[changedRxns[j]]);
+			    for (j = 0;j<n ;j++ ) {	
+					error = GRBsetdblattrelement(model, GRB_DBL_ATTR_LB,changedRxns[j],lb[changedRxns[j]]);
+					error = GRBsetdblattrelement(model, GRB_DBL_ATTR_UB,changedRxns[j],ub[changedRxns[j]]);
+				    //glp_set_col_bnds(P,changedRxns[j]+1,coltype[changedRxns[j]],lb[changedRxns[j]],ub[changedRxns[j]]);
 			    }
-				glp_set_obj_coef(P,obj[s],0);
+				//glp_set_obj_coef(P,obj[s],0);
+				error = GRBsetdblattrelement(model, GRB_DBL_ATTR_OBJ, obj[s]-1, 0);
 			}
 		}else
 		{
@@ -335,17 +383,26 @@ int main(int argc,char **argv)
 					    fprintf(fout,"\t%.6f",val_no_delet[s]);
 					    continue;
 				    }
-					glp_set_obj_coef(P,obj[s],type);
+					error = GRBsetdblattrelement(model, GRB_DBL_ATTR_OBJ, obj[s]-1, 1.0);
+				    error = GRBsetintattr(model, GRB_INT_ATTR_MODELSENSE, type);
+					//glp_set_obj_coef(P,obj[s],type);
 				    for (k = 0;k<n ;k++ ) {
-					    glp_set_col_bnds(P,changedRxns[k]+1,GLP_FX,0,0);
+					    //glp_set_col_bnds(P,changedRxns[k]+1,GLP_FX,0,0);
+					    error = GRBsetdblattrelement(model, GRB_DBL_ATTR_LB,changedRxns[k],0);
+					    error = GRBsetdblattrelement(model, GRB_DBL_ATTR_UB,changedRxns[k],0);
 				    }
-				    glp_simplex(P, &parm);
-				    fprintf(fout,"\t%.6f",type*glp_get_obj_val(P));
+				    //glp_simplex(P, &parm);
+					error = GRBoptimize(model);
+					error = GRBgetdblattr(model, GRB_DBL_ATTR_OBJVAL, &tmpval);
+				    fprintf(fout,"\t%.6f",tmpval);
 				    //is_expr[i] = 1; is_expr[j] = 1;
-				    for (k = 0;k<n ;k++ ) {			
-				        glp_set_col_bnds(P,changedRxns[k]+1,coltype[changedRxns[k]],lb[changedRxns[k]],ub[changedRxns[k]]);
+				    for (k = 0;k<n ;k++ ) {	
+						error = GRBsetdblattrelement(model, GRB_DBL_ATTR_LB,changedRxns[k],lb[changedRxns[k]]);
+					    error = GRBsetdblattrelement(model, GRB_DBL_ATTR_UB,changedRxns[k],ub[changedRxns[k]]);
+				        //glp_set_col_bnds(P,changedRxns[k]+1,coltype[changedRxns[k]],lb[changedRxns[k]],ub[changedRxns[k]]);
 			        }
-					glp_set_obj_coef(P,obj[s],0);
+					error = GRBsetdblattrelement(model, GRB_DBL_ATTR_OBJ, obj[s]-1, 0);
+					//glp_set_obj_coef(P,obj[s],0);
 				}
 			}
 			fprintf(fout,"\n");

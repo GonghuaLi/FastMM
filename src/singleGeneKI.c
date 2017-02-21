@@ -114,7 +114,7 @@ int main(int argc,char **argv)
 	fclose(fin);
 	num_obj = i;
 
-	printf("FastKO: Number of objective function is %d\n",num_obj);
+	printf("FastMM: Number of objective function is %d\n",num_obj);
 
 	lb = (double *)malloc((numRxns+1)*sizeof(double));
 	ub = (double *)malloc((numRxns+1)*sizeof(double));
@@ -158,7 +158,7 @@ int main(int argc,char **argv)
 	    }
 		num_constraint = i;
 	    fclose(fin);
-		printf("FastKO: Using canstraint: number of constraint is %d\n",num_constraint);
+		printf("FastMM: Using canstraint: number of constraint is %d\n",num_constraint);
 
 		for (i = 0;i<num_constraint ;i++ )
 		{
@@ -187,7 +187,7 @@ int main(int argc,char **argv)
 	iseffectiveRxns = malloc2i(num_obj+1,numRxns+1);
 	//iseffectiveRxns = (int *)malloc((numRxns+1)*sizeof(int));
 	num_effective_genes = get_effective_genes(rules,numRxns,gene_effective,num_gen);
-    printf("FastKO: Number of active genes is %d\n",num_effective_genes);
+    printf("FastMM: Number of active genes is %d\n",num_effective_genes);
 
 	fout = fopen(outputfile,"wb");
     //no deletion
@@ -224,7 +224,7 @@ int main(int argc,char **argv)
 	//single_delet_vals = (double *)malloc((num_gen+1)*sizeof(double));
 
 	//single_gene_deletion
-	printf("FastKO:  Start single gene deletion....\n");
+	printf("FastMM:  Start single gene knock-in....\n");
 
 	for (i =0;i<num_gen ;i++ )
 	{
@@ -246,13 +246,13 @@ int main(int argc,char **argv)
 					}
 				}
 
-				if (effectiveStat<1)
-			    {
+				//if (effectiveStat<1)
+			    //{
 				    //is_expr[i] = 1;
-				    fprintf(fout,"\t%.6f",val_no_delet[s]);
+				//    fprintf(fout,"\t%.6f",val_no_delet[s]);
 				    //single_delet_vals[s][i] = val_no_delet[s];
-				    continue;
-			    }
+				//    continue;
+			    //}
 
                 glp_set_obj_coef(P,obj[s],type);
 				for (j = 0;j<n ;j++ ) {
@@ -288,7 +288,7 @@ int main(int argc,char **argv)
 		fprintf(fout,"\n");
 	}
 
-	printf("FastKO:  Single gene deletion: completed!\n\n");
+	printf("FastMM:  Single gene Knock-in: completed!\n\n");
 	printf("\n");
 	fclose(fout);
 	finish = clock();

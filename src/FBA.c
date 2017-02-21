@@ -114,7 +114,7 @@ int main(int argc,char **argv)
 	fclose(fin);
 	num_obj = i;
 
-	printf("FastKO: Number of objective function is %d\n",num_obj);
+	printf("FastMM: Number of objective function is %d\n",num_obj);
 
 	lb = (double *)malloc((numRxns+1)*sizeof(double));
 	ub = (double *)malloc((numRxns+1)*sizeof(double));
@@ -158,7 +158,7 @@ int main(int argc,char **argv)
 	    }
 		num_constraint = i;
 	    fclose(fin);
-		printf("FastKO: Using canstraint: number of constraint is %d\n",num_constraint);
+		printf("FastMM: Using canstraint: number of constraint is %d\n",num_constraint);
 
 		for (i = 0;i<num_constraint ;i++ )
 		{
@@ -187,7 +187,7 @@ int main(int argc,char **argv)
 	iseffectiveRxns = malloc2i(num_obj+1,numRxns+1);
 	//iseffectiveRxns = (int *)malloc((numRxns+1)*sizeof(int));
 	num_effective_genes = get_effective_genes(rules,numRxns,gene_effective,num_gen);
-    printf("FastKO: Number of active genes is %d\n",num_effective_genes);
+    printf("FastMM: Number of active genes is %d\n",num_effective_genes);
 
 	fout = fopen(outputfile,"wb");
     //no deletion
