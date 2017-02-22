@@ -26,6 +26,7 @@ int help()
 	printf("        -o outputfile (require)\n");
 	printf("        -f objective function file (option,defent is biomass_reaction)\n");
 	printf("        -c constraintfile (option,defent no additional constraint)\n");
+	printf("        -e effective_rxnsfile (optional,default not use this file)\n");
 	printf("eg: doubleMetKO -m cobramodel -t max -o outputfile\n\n");
 
 	return 0;
@@ -34,10 +35,10 @@ int help()
 int main(int argc,char **argv)
 { 
 	int i,j,k,m,n,s,num_gen,num_rxns,*is_expr, *changedRxns,contrlputs =0;
-	int error,numRxns,numMets,*coltype,is_constraint=0,is_objf=0;
+	int error,numRxns,numMets,*coltype,is_constraint=0,is_objf=0,is_effective_file = 0;
 	double duration,type;
 	double *lb,*ub;
-	char buf[2048],objfile[300],outputfile[300],optimizeType[100],constraintfile[300];
+	char buf[2048],objfile[300],outputfile[300],optimizeType[100],constraintfile[300],effectfile[300];
 	char **rules;
     clock_t start, finish;
 	start = clock();
@@ -62,6 +63,7 @@ int main(int argc,char **argv)
 		else if (strcmp(argv[i],"-t")==0) {strcpy(optimizeType,argv[i+1]);contrlputs++;}
 		else if (strcmp(argv[i],"-o")==0) {strcpy(outputfile,argv[i+1]);contrlputs++;}
 		else if (strcmp(argv[i],"-c")==0) {strcpy(constraintfile,argv[i+1]);is_constraint++;}
+		else if (strcmp(argv[i],"-e")==0) {strcpy(effectfile,argv[i+1]);is_effective_file++;}
 
 		else continue;
     }
@@ -106,8 +108,9 @@ int main(int argc,char **argv)
 	//numMets = glp_get_num_rows(P);
 
 	//read objective function file
-	int *obj,num_obj;
+	int *obj,num_obj,*input_effectRxns;
 	obj = (int *)malloc((numRxns+1)*sizeof(int));//maximum number of objective function is numRxns.
+	input_effectRxns = (int *)malloc((numRxns+1)*sizeof(int));//maximum number of objective function is numRxns.
 
 	if (is_objf ==1)
 	{
@@ -126,6 +129,19 @@ int main(int argc,char **argv)
 	num_obj = i;
 
 	printf("FastMM:doubleGeneDeletion: Number of objective function is %d\n",num_obj);
+
+		if (is_effective_file ==1)
+	{
+		fin = fopen(effectfile,"rb");
+	}
+	if (fin==NULL){printf("\nError in open is_effective_file\n\n");exit(1);}
+	i = 0;
+	while(fgets(buf, 2048, fin) != NULL)
+	{
+		sscanf(buf,"%d",input_effectRxns+i);
+		i = i+1;
+	}
+	fclose(fin);
 
 	lb = (double *)malloc((numRxns+1)*sizeof(double));
 	ub = (double *)malloc((numRxns+1)*sizeof(double));
@@ -224,18 +240,28 @@ int main(int argc,char **argv)
 		fprintf(fout,"\t%.6f",tmpval);
 
 		error = GRBgetdblattrarray(model, GRB_DBL_ATTR_X, 0, numRxns, xval);
-		for (j =0 ;j<numRxns ;j++ )
-	    {
+		if (i==0 && is_effective_file==1)
+		{
+			for (j =0 ;j<numRxns ;j++ )
+			{
+			    iseffectiveRxns[i][j] = input_effectRxns[j];
+			}
+		}else{
+		    for (j =0 ;j<numRxns ;j++ )
+	        {
+			//error = GRBsetdblattrelement(model, GRB_DBL_ATTR_X,j,tmp);
+			//printf("%i    %.6f\n",j,xval[j]);
 		    //tmp = glp_get_col_prim(P,j+1);
-		    if (ABS(xval[j]) <1e-9 )
-		    {
-			    iseffectiveRxns[i][j] = 0;
-		    }else
-		    {
-				//printf("%j    %.6f\n",j,tmpval);
-			    iseffectiveRxns[i][j] = 1;
-		    }
-	    }
+		        if (ABS(xval[j]) <1e-9 )
+		        {
+			        iseffectiveRxns[i][j] = 0;
+		        }else
+		        {
+				    //printf("%j    %.6f\n",j,tmpval);
+			        iseffectiveRxns[i][j] = 1;
+		        }
+	        }
+		}
 		//glp_set_obj_coef(P,obj[i],0);
 		error = GRBsetdblattrelement(model, GRB_DBL_ATTR_OBJ, obj[i]-1, 0);
 	}

@@ -5,7 +5,14 @@ cout = [c,'.txt'];
 a = cobra2FastKO(model,c);
 isobj = 0;
 iscons = 0;
-programm_name = 'singleGeneKI';
+global CBTLPSOLVER
+if strcmp(CBTLPSOLVER,'gurobi5')
+    programm_name = 'singleGeneKI_gurobi';
+    disp('FastMM_singleGeneKI: using gurobi 5 solver');
+else
+    programm_name = 'singleGeneKI';
+    warning('FastMM_singleGeneKI: using glpk solver');
+end
 
 if isempty(varargin)
     system([programm_name,' -m ',c,' -t max -o ',cout]);

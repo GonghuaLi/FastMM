@@ -306,6 +306,40 @@ int get_effective_genes(char **rules,int numRxns,int *gene_effective,int num_gen
 	return r;
 }
 
+int get_effective_genes_from_effectrxns(char **rules,int numRxns,int *gene_effective,int num_genes, int *effectiveRxns)
+{
+
+	int i,j,n,k,r,stat,stata,geneid,ctrlBrackets;
+	char opera;
+    for (i = 0;i<num_genes ;i++ )
+		gene_effective[i] = 0;
+	i=0;
+	for (k=0;k<numRxns ;k++ )
+	{
+		n = strlen(rules[k]);
+		if (n>16 && effectiveRxns[k] == 1 )
+		{
+			stat = 1;
+			opera = '&';
+			for (j =15;j<n ;j++ )
+			{
+				if (rules[k][j] == '(')
+				{
+					ctrlBrackets = 1;
+					sscanf(rules[k]+j+1,"%d",&geneid);
+					gene_effective[geneid-1]=1;
+				}
+			}
+		}
+	}
+	r = 0;
+	for (i=0;i<num_genes ;i++ )
+	{
+		if(gene_effective[i]>0) r++;
+	}
+	return r;
+}
+
 int get_changedRxns_by_one_met(int *IA,double *VA, int lenA, double *lb,double *ub, int *tmprun,int *changedRxn)
 {
 	int i, j,k;

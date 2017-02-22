@@ -23,10 +23,10 @@ for i = 1:length(model.rxns)
     col_value = full(S(indx,i));
     for j = 1:length(reaction_mets)
         if rem(j,2)==1
-            fprintf(fid,'    %s    %s%16.3f   ',formatNames('R',i),...
+            fprintf(fid,'    %s    %s%16.5f   ',formatNames('R',i),...
                 formatNames('M',reaction_mets(j)),col_value(j));
         else
-            fprintf(fid,'%s%16.3f   \n',formatNames('M',reaction_mets(j)),col_value(j));
+            fprintf(fid,'%s%16.5f   \n',formatNames('M',reaction_mets(j)),col_value(j));
         end
         if j == length(reaction_mets) & rem(j,2)==1
             fprintf(fid,'\n');
@@ -38,9 +38,9 @@ tzero = 0;
 fprintf(fid,'RHS\n');
 for i = 1:length(model.mets)
     if rem(i,2) == 1
-        fprintf(fid,'    .00001    %s%16.3f   ',formatNames('M',i),model.b(i));
+        fprintf(fid,'    .00001    %s%16.5f   ',formatNames('M',i),model.b(i));
     else
-        fprintf(fid,'%s%16.3f   \n',formatNames('M',i),model.b(i));
+        fprintf(fid,'%s%16.5f   \n',formatNames('M',i),model.b(i));
     end
     if i == length(model.mets) & rem(i,2)==1
             fprintf(fid,'\n');

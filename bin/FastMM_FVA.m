@@ -5,8 +5,15 @@ cout = [c,'.txt'];
 a = cobra2FastKO(model,c);
 isobj = 0;
 iscons = 0;
-programm_name = 'FVA';
-
+global CBTLPSOLVER
+if strcmp(CBTLPSOLVER,'gurobi5')
+    programm_name = 'FVA_gurobi';
+    disp('FastMM_FVA: using gurobi 5 solver');
+else
+    programm_name = 'FVA';
+    warning('FastMM_FVA: using glpk solver');
+end
+    
 if isempty(varargin)
     system([programm_name,' -m ',c,' -t max -o ',cout]);
 else

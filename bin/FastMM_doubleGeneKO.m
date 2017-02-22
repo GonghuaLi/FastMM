@@ -5,8 +5,30 @@ cout = [c,'.txt'];
 a = cobra2FastKO(model,c);
 isobj = 0;
 iscons = 0;
-
-programm_name = 'doubleGeneKO';
+is_e = 0;
+if sum(model.c >0) ==1
+   sol = optimizeCbModel(model,'max','one');
+   effectrxns = abs(sol.x)>1e-9;
+   eout = [c,'eff.txt'];
+   writetxt(num2cellstr(effectrxns),eout,'\t');
+   is_e = 1;
+end
+global CBTLPSOLVER
+if strcmp(CBTLPSOLVER,'gurobi5')
+    if is_e==1
+        programm_name = ['doubleGeneKO_gurobi -e ',eout];
+    else
+        programm_name = 'doubleGeneKO_gurobi';
+    end
+    disp('FastMM_doubleGeneKO: using gurobi  solver');
+else
+    if is_e==1
+        programm_name = ['doubleGeneKO -e ',eout];
+    else
+        programm_name = 'doubleGeneKO';
+    end
+    warning('FastMM_doubleGeneKO: using glpk solver');
+end
 
 if isempty(varargin)
     system([programm_name,' -m ',c,' -t max -o ',cout]);
@@ -49,6 +71,9 @@ if isobj==1
 end
 if iscons==1
     delete(cons);
+end
+if is_e == 1
+    delete(eout);
 end
 flux = file2cell(cout,'\t');
 flux = cell2float(flux);

@@ -1,0 +1,21 @@
+#! /bin/sh
+#
+# glpk linux
+gcc ./src/singleGeneKO.c /home/ligh/soft/FastKO/lib/libglpk.a -I./include -O3 -lm -o ./bin/linux64/singleGeneKO
+gcc ./src/doubleGeneKO.c /home/ligh/soft/FastKO/lib/libglpk.a -I./include -O3 -lm -o ./bin/linux64/doubleGeneKO
+gcc ./src/FVA.c /home/ligh/soft/FastKO/lib/libglpk.a -I./include -O3 -lm -o ./bin/linux64/FVA
+gcc ./src/singleGeneKI.c /home/ligh/soft/FastKO/lib/libglpk.a -I./include -O3 -lm -o ./bin/linux64/singleGeneKI
+gcc ./src/singleMetKO.c /home/ligh/soft/FastKO/lib/libglpk.a -I./include -O3 -lm -o ./bin/linux64/singleMetKO
+gcc ./src/doubleMetKO.c /home/ligh/soft/FastKO/lib/libglpk.a -I./include -O3 -lm -o ./bin/linux64/doubleMetKO
+gcc ./src/FBA.c /home/ligh/soft/FastKO/lib/libglpk.a -I./include -O3 -lm -o ./bin/linux64/FBA
+
+
+# gurobi linux
+gcc ./src/FBA_gurobi.c -m64 -g -o ./bin/linux64/FBA_gurobi -I/home/ligh/soft/gurobi605/linux64/include  -I./include -L/home/ligh/soft/gurobi605/linux64/lib -lm -lgurobi60 -lpthread -O3
+gcc ./src/FVA_gurobi.c -m64 -g -o ./bin/linux64/FVA_gurobi -I/home/ligh/soft/gurobi605/linux64/include  -I./include -L/home/ligh/soft/gurobi605/linux64/lib -lm -lgurobi60 -lpthread -O3
+gcc ./src/singleGeneKO_gurobi.c -m64 -g -o ./bin/linux64/singleGeneKO_gurobi -I/home/ligh/soft/gurobi605/linux64/include  -I./include -L/home/ligh/soft/gurobi605/linux64/lib -lm -lgurobi60 -lpthread -O3
+gcc ./src/doubleGeneKO_gurobi.c -m64 -g -o ./bin/linux64/doubleGeneKO_gurobi -I/home/ligh/soft/gurobi605/linux64/include  -I./include -L/home/ligh/soft/gurobi605/linux64/lib -lm -lgurobi60 -lpthread -O3
+gcc ./src/singleGeneKI_gurobi.c -m64 -g -o ./bin/linux64/singleGeneKI_gurobi -I/home/ligh/soft/gurobi605/linux64/include  -I./include -L/home/ligh/soft/gurobi605/linux64/lib -lm -lgurobi60 -lpthread -O3
+gcc ./src/singleMetKO_gurobi.c -m64 -g -o ./bin/linux64/singleMetKO_gurobi -I/home/ligh/soft/gurobi605/linux64/include  -I./include -L/home/ligh/soft/gurobi605/linux64/lib -lm -lgurobi60 -lpthread -O3
+gcc ./src/doubleMetKO_gurobi.c -m64 -g -o ./bin/linux64/doubleMetKO_gurobi -I/home/ligh/soft/gurobi605/linux64/include  -I./include -L/home/ligh/soft/gurobi605/linux64/lib -lm -lgurobi60 -lpthread -O3
+
