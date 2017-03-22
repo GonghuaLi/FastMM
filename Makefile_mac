@@ -1,0 +1,21 @@
+#! /bin/sh
+#
+# glpk linux
+gcc ./src/singleGeneKO.c /home/ligh/soft/FastKO/lib/libglpk.a -I./include -O3 -lm -o ./bin/mac/singleGeneKO
+gcc ./src/doubleGeneKO.c /home/ligh/soft/FastKO/lib/libglpk.a -I./include -O3 -lm -o ./bin/mac/doubleGeneKO
+gcc ./src/FVA.c /home/ligh/soft/FastKO/lib/libglpk.a -I./include -O3 -lm -o ./bin/mac/FVA
+gcc ./src/singleGeneKI.c /home/ligh/soft/FastKO/lib/libglpk.a -I./include -O3 -lm -o ./bin/mac/singleGeneKI
+gcc ./src/singleMetKO.c /home/ligh/soft/FastKO/lib/libglpk.a -I./include -O3 -lm -o ./bin/mac/singleMetKO
+gcc ./src/doubleMetKO.c /home/ligh/soft/FastKO/lib/libglpk.a -I./include -O3 -lm -o ./bin/mac/doubleMetKO
+gcc ./src/FBA.c /home/ligh/soft/FastKO/lib/libglpk.a -I./include -O3 -lm -o ./bin/mac/FBA
+
+
+# gurobi linux
+gcc ./src/FBA_gurobi.c -m64 -g -o ./bin/mac/FBA_gurobi -I/home/ligh/soft/gurobi605/mac/include  -I./include -L/home/ligh/soft/gurobi605/mac/lib -lm -lgurobi60 -lpthread -O3
+gcc ./src/FVA_gurobi.c -m64 -g -o ./bin/mac/FVA_gurobi -I/home/ligh/soft/gurobi605/mac/include  -I./include -L/home/ligh/soft/gurobi605/mac/lib -lm -lgurobi60 -lpthread -O3
+gcc ./src/singleGeneKO_gurobi.c -m64 -g -o ./bin/mac/singleGeneKO_gurobi -I/home/ligh/soft/gurobi605/mac/include  -I./include -L/home/ligh/soft/gurobi605/mac/lib -lm -lgurobi60 -lpthread -O3
+gcc ./src/doubleGeneKO_gurobi.c -m64 -g -o ./bin/mac/doubleGeneKO_gurobi -I/home/ligh/soft/gurobi605/mac/include  -I./include -L/home/ligh/soft/gurobi605/mac/lib -lm -lgurobi60 -lpthread -O3
+gcc ./src/singleGeneKI_gurobi.c -m64 -g -o ./bin/mac/singleGeneKI_gurobi -I/home/ligh/soft/gurobi605/mac/include  -I./include -L/home/ligh/soft/gurobi605/mac/lib -lm -lgurobi60 -lpthread -O3
+gcc ./src/singleMetKO_gurobi.c -m64 -g -o ./bin/mac/singleMetKO_gurobi -I/home/ligh/soft/gurobi605/mac/include  -I./include -L/home/ligh/soft/gurobi605/mac/lib -lm -lgurobi60 -lpthread -O3
+gcc ./src/doubleMetKO_gurobi.c -m64 -g -o ./bin/mac/doubleMetKO_gurobi -I/home/ligh/soft/gurobi605/mac/include  -I./include -L/home/ligh/soft/gurobi605/mac/lib -lm -lgurobi60 -lpthread -O3
+
