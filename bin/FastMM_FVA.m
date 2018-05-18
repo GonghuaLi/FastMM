@@ -2,18 +2,21 @@ function flux = FastMM_FVA(model,varargin)
 t = clock;
 c = ['fva',num2str(ceil(rand(1,1)*1000)),num2str(ceil(t(6)*100))];
 cout = [c,'.txt'];
-a = cobra2FastKO(model,c);
+
 isobj = 0;
 iscons = 0;
 global CBTLPSOLVER
 if strcmp(CBTLPSOLVER,'gurobi5')
     programm_name = 'FVA_gurobi';
     disp('FastMM_FVA: using gurobi 5 solver');
+    flux = FastMM_FVA_gurobi5(model);
+    return;
 else
     programm_name = 'FVA';
     warning('FastMM_FVA: using glpk solver');
 end
-    
+
+a = cobra2FastKO(model,c);    
 if isempty(varargin)
     system([programm_name,' -m ',c,' -t max -o ',cout]);
 else
