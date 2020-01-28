@@ -1,6 +1,15 @@
 % test
 addpath('./bin');
+addpath(genpath('./bin/extern/cobratoolbox-3.0.4_base'))
+setenv('PATH', [getenv('PATH'), ';',pwd(),'\bin']);
 load('./data/consistRecon2_v3.mat');
+%% test cobra solver
+if changeCobraSolver('gurobi5')
+    display('Using gurobi5 solver');
+elseif changeCobraSolver('cplex')
+    display('Using cplex solver');
+end
+
 
 %%
 display('Test FVA...');

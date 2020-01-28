@@ -11,6 +11,10 @@ if strcmp(CBTLPSOLVER,'gurobi5')
     disp('FastMM_FVA: using gurobi 5 solver');
     flux = FastMM_FVA_gurobi5(model);
     return;
+elseif strcmp(CBTLPSOLVER,'cplex')
+    disp('FastMM_FVA: using cplex  solver');
+    flux = FastMM_FVA_cplex(model);
+    return;
 else
     programm_name = 'FVA';
     warning('FastMM_FVA: using glpk solver');

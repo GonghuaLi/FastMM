@@ -14,20 +14,34 @@ for i = 1:N_samples
 end
 
 %% multiple threading double gene knockout
+%CoreNum = numcpu;
+%if matlabpool('size')<=0 
+%    matlabpool('open','local',CoreNum);
+%else  
+%    disp('matlab pool already started::reopen matlab pool');
+%    matlabpool close;
+%    matlabpool('open','local',CoreNum); 
+%end
+
+%multiple threading FVA
+% using parpool, you should start matlab : matlab -nodisplay  or matlab
+%                do not use -nojvm option
 CoreNum = numcpu;
-if matlabpool('size')<=0 
-    matlabpool('open','local',CoreNum);
+if isempty(gcp('nocreate')) 
+    parpool('local',CoreNum);
 else  
     disp('matlab pool already started::reopen matlab pool');
-    matlabpool close;
-    matlabpool('open','local',CoreNum); 
+    delete(gcp('nocreate'));
+    parpool('local',CoreNum); 
 end
-
+global CBTLPSOLVER
+thesolver = CBTLPSOLVER;
 parfor i = 1:N_samples
-    GeneKOout_tmp = FastMM_doubleGeneKO(outmodels{i},varargin);
+    GeneKOout_tmp = FastMM_doubleGeneKO_par(outmodels{i},thesolver,varargin);
     GeneKOout(:,i+2) = GeneKOout_tmp(:,3);
 end
-matlabpool close;
+%matlabpool close;
+delete(gcp('nocreate'));
 %% indx
 ind1 = GeneKOout(:,1);
 ind2 = GeneKOout(:,2);
