@@ -1,7 +1,15 @@
 % test
 addpath('./bin');
 addpath(genpath('./bin/extern/cobratoolbox-3.0.4_base'))
-setenv('PATH', [getenv('PATH'), ';',pwd(),'\bin']);
+binpath = which('FastMM_FVA.m');
+binpath = binpath(1:end-13);
+if ~contains(getenv('PATH'),binpath)
+    if ispc
+        setenv('PATH', [getenv('PATH'), ';',binpath]);
+    else
+        setenv('PATH', [getenv('PATH'), ':',binpath]);
+    end
+end
 load('./data/consistRecon2_v3.mat');
 %% test cobra solver
 if changeCobraSolver('gurobi5')

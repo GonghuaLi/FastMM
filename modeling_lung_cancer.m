@@ -1,17 +1,24 @@
-%% FastMM
+%% FastMM for modeling lung cancer
 % step 1: read paramaters and setenv
 addpath('./bin');
-addpath(genpath('./bin/extern/cobratoolbox-3.0.4_base'))
-addpath('./bin/extern/FASTCORE')
-if ispc
-  setenv('PATH', [getenv('PATH'), ';',pwd(),'\bin']);
-else
-   setenv('PATH', [getenv('PATH'), ':',pwd(),'/bin']); 
+addpath(genpath('./bin/extern'))
+binpath = which('FastMM_FVA.m');
+binpath = binpath(1:end-13);
+if ~contains(getenv('PATH'),binpath)
+    if ispc
+        setenv('PATH', [getenv('PATH'), ';',binpath]);
+    else
+        setenv('PATH', [getenv('PATH'), ':',binpath]);
+    end
 end
 pars = parse_parsfile('./pars.txt');
 load(pars.consModel);
 consmodel = model;
-%% Reconstruction by fastcore the output saved in './out/reconstructed_model.txt'
+%% using cplex here for fastcore and mCADRE
+changeCobraSolver('cplex')
+%% Reconstruction by mCADRE the output saved in 'reconstructed_model_mCADRE', need cplex solver
+%  mCADREModel = reconstruction_by_mCADRE(consmodel,pars.expressionFile,pars.cutoff);
+%% Reconstruction by fastcore the output saved in './out/reconstructed_model.txt',need cplex solver
 fastcoreModel = reconstruction_by_fastcore(consmodel,pars.expressionFile,pars.cutoff);
 %%  write model for FVA  and gene deletion
 modelMatrix = file2cell('./out/reconstructed_model.txt','\t');

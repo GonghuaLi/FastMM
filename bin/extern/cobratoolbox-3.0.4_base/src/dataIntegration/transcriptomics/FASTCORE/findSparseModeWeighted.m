@@ -1,47 +1,44 @@
-function Supp = findSparseModeWeighted( J, P, singleton, model, LPproblem, weights, epsilon )
-% Finds a mode that contains as many reactions from J and as few from P.
-% Returns its support, or [] if no reaction from J can get flux above epsilon.
-% Based on: `The FASTCORE algorithm for context-specific metabolic network reconstruction.
-% Input C is the core set, and output A is the reconstruction, Vlassis et
-% al., 2013, PLoS Comp Biol.`
+function Supp = findSparseModeWeighted( J, P, singleton, model, epsilon )
 %
-% USAGE:
+% Supp = findSparseMode( J, P, singleton, model, epsilon )
 %
-%    Supp = findSparseMode( J, P, singleton, model, epsilon )
+% Finds a mode that contains as many reactions from J and as few from P
+% Returns its support, or [] if no reaction from J can get flux above epsilon
+% Based on: "The FASTCORE algorithm for context-specific metabolic network reconstruction
+% Input C is the core set, and output A is the reconstruction", Vlassis et
+% al., 2013, PLoS Comp Biol.
 %
-% INPUTS:
-%    J:           Indicies of irreversible reactions
-%    P:           Reactions
-%    singleton:   Takes only first instance from J, else takes whole J
-%    model:       Model structure
-%    LPproblem:   The LP problem for the model structure
-%    weights:     The weights associated with the reactions.
-%    epsilon:     Parameter (default: 1e-4; see Vlassis et al for more details)
+% INPUT
+% J
+% P
+% singleton
+% model
+% epsilon
 %
-% OUTPUT:
-%    Supp:        Support or [] if no reaction from J can get flux above epsilon
+% OUTPUT
+% Supp
 %
-% .. Author: - Ines Thiele, Dec 2013
+% Ines Thiele, Dec 2013
 
 Supp = [];
-if isempty( J )
+if isempty( J ) 
   return;
 end
 
 if singleton
-  V = LP7( J(1), model, LPproblem, epsilon );
+  V = LP7( J(1), model, epsilon );
 else
-  V = LP7( J, model, LPproblem, epsilon );
+  V = LP7( J, model, epsilon );
 end
 
-K = intersect( J, find(V >= 0.99*epsilon) );
+K = intersect( J, find(V >= 0.99*epsilon) );   
 
-if isempty( K )
+if isempty( K ) 
   return;
 end
 
 %V = LP9( K, P, model, epsilon );
-V = LP9weighted( weights, K, P, model, LPproblem, epsilon );
+V = LP9weighted( model.weights, K, P, model, epsilon );
 
 
 Supp = find( abs(V) >= 0.99*epsilon );

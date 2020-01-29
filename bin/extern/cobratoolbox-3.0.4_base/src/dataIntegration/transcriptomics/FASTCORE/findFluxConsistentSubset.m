@@ -1,4 +1,4 @@
-function [FConsistentMetBool,FConsistentRxnBool,FInConsistentMetBool,FInConsistentRxnBool,model] = findFluxConsistentSubset(model,epsilon,printLevel)
+function [FConsistentMetBool,FConsistentRxnBool,FInConsistentMetBool,FInConsistentRxnBool,model] = findFluxConsistentSubset(model,tepsilon,printLevel)
 %finds the subset of S that is flux consistent using various algorithms,
 %but fastcc from fastcore by default
 %
@@ -16,11 +16,14 @@ function [FConsistentMetBool,FConsistentRxnBool,FInConsistentMetBool,FInConsiste
 % FInConsistentMetBool          m x 1 boolean vector indicating flux inconsistent mets  
 % FInConsistentRxnBool          n x 1 boolean vector indicating flux inconsistent rxns
 
-if ~exist('epsilon','var')
+if ~exist('tepsilon','var')
     epsilon=1e-4;
 end
 if ~exist('printLevel','var')
     printLevel=1;
+end
+if isstruct(tepsilon)
+    epsilon = tepsilon.epsilon;
 end
 
 [mlt,nlt]=size(model.S);
