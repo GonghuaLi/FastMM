@@ -1,6 +1,6 @@
 %% install
 if ismac
-    system('chmod 755 ./bin/linux64/*');
+    system('chmod 755 ./bin/mac/*');
     system('cp ./bin/mac/* ./bin/');
     disp('Use mac binary.');
 elseif isunix
