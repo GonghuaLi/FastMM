@@ -1,5 +1,5 @@
-%% FastMM for modeling lung cancer
-% step 1: read paramaters and setenv
+%% FastMM for personalized modeling: example for modeling lung cancer
+% read paramaters and setenv
 addpath('./bin');
 addpath(genpath('./bin/extern'))
 binpath = which('FastMM_FVA.m');
