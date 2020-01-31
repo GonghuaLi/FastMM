@@ -38,7 +38,7 @@ GeneKOout = FastMM_singleGeneKO_multi(consmodel,fastcoreModel,pars.numCPU);
 %% single metebolite knockout analysis
 MetKOout = FastMM_singleMetKO_multi(consmodel,fastcoreModel,pars.numCPU);
 
-%%  double metabolic KO: this will spend much time
+%%  double metabolic knockout: this will spend much time
 %GeneKOout = FastMM_doubleMetKO_multi(consmodel,fastcoreModel,pars.numCPU);
 
 
@@ -51,7 +51,7 @@ for i =1:length(GeneKOout)
     KOout(:,i) = GeneKOout{i}(2:end,3);
 end
 writetxt(['genes',modelnames;[consmodel.genes,num2cellstr(KOout)]],'./out/singleGeneKO.txt','\t');
-%%
+
 %write MetKO
 writetxt(['Mets',modelnames;[consmodel.mets,num2cellstr(MetKOout)]],'./out/singleMetKO.txt','\t');
 

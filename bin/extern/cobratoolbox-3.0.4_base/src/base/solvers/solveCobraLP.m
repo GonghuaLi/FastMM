@@ -182,6 +182,10 @@ stat = -99;
 algorithm = 'default';
 
 t_start = clock;
+% suport previous gurobi5
+if strcmp(solver,'gurobi5')
+    solver = 'gurobi';
+end
 switch solver
     %% cplexLP
     case 'cplex'

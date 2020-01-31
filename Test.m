@@ -3,7 +3,8 @@ addpath('./bin');
 addpath(genpath('./bin/extern/cobratoolbox-3.0.4_base'))
 binpath = which('FastMM_FVA.m');
 binpath = binpath(1:end-13);
-if ~contains(getenv('PATH'),binpath)
+%%
+if isempty(strfind(getenv('PATH'),binpath))
     if ispc
         setenv('PATH', [getenv('PATH'), ';',binpath]);
     else
@@ -16,6 +17,10 @@ if changeCobraSolver('gurobi5')
     display('Using gurobi5 solver');
 elseif changeCobraSolver('cplex')
     display('Using cplex solver');
+elseif changeCobraSolver('glpk')
+    display('Using glpk solver');
+else
+    display('No solver found');
 end
 
 

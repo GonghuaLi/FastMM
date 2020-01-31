@@ -26,7 +26,7 @@ end
 %multiple threading FVA
 % using parpool, you should start matlab : matlab -nodisplay  or matlab
 %                do not use -nojvm option
-CoreNum = pars.numcpu;
+CoreNum = numcpu;
 if isempty(gcp('nocreate')) 
     parpool('local',CoreNum);
 else  
