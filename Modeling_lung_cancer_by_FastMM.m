@@ -12,6 +12,7 @@ if isempty(strfind(getenv('PATH'),binpath))
     end
 end
 pars = parse_parsfile('./pars.txt');
+pars.expressionFile = './data/TCGA_lung.txt';%lung cancer expression
 load(pars.consModel);
 consmodel = model;
 %% using cplex here for fastcore
