@@ -18,6 +18,9 @@ and MCMC sampling.
 
 ***FastMM*** is ***2~400 times faster*** than COBRA 3.0 in performing flux variability analysis and knockout analysis and returns consistent results. When applied to MCMC sampling, ***FastMM*** is also ***10~15 times faster*** than COBRA 3.0. 
 
+## Citatioin: 
+Li, G., Dai, S., Han, F. et al. FastMM: an efficient toolbox for personalized constraint-based metabolic modeling. BMC Bioinformatics 21, 67 (2020). https://doi.org/10.1186/s12859-020-3410-4
+
 ## Dependency:
 **The core programs of FastMM are independent, howerver, the matlab interface is dependent on the following software/toolbox:**
 
