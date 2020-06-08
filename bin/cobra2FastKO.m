@@ -59,7 +59,8 @@ fclose(fid);
 %% .ruls
 fid = fopen([outmodelname,sp,filename,'.ruls'],'wb');
 for i = 1:length(inmodel.rules)
-    outstr = regexprep(inmodel.rules{i},'x\((\d+)\)','$1');
+    %outstr = regexprep(inmodel.rules{i},'x\((\d+)\)','$1');
+    outstr = regexprep(inmodel.rules{i},'x','');
     if length(outstr)>1024
         outstr = '';
     end
