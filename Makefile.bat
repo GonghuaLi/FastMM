@@ -8,6 +8,9 @@ c:\mingw\bin\gcc ./src/doubleMetKO.c C:/MinGW/gnu/lib/libglpk.a -I./include -O3 
 c:\mingw\bin\gcc ./src/FBA.c C:/MinGW/gnu/lib/libglpk.a -I./include -O3 -lm -o ./bin/win32/FBA.exe
 
 
+D:\mingw\bin\gcc ./src/singleGeneKO.c D:/MinGW/gnu/lib/libglpk.a -I./include -O3 -lm -o ./bin/win32/singleGeneKOa.exe
+
+
 # gurobi win64
 gcc ./src/FBA_gurobi.c -m64 -g -o ./bin/win32/FBA_gurobi.exe -IC:\gurobi652\win64\include  -I.\include -LC:\gurobi652\win64\lib -lm -lgurobi65 -lpthread -O3
 gcc ./src/FVA_gurobi.c -m64 -g -o ./bin/win32/FVA_gurobi.exe -IC:\gurobi652\win64\include  -I.\include -LC:\gurobi652\win64\lib -lm -lgurobi65 -lpthread -O3

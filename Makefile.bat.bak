@@ -25,3 +25,5 @@ gcc ./src/FVA_cplex_mat.c -m64 -g -o ./bin/win32/FVA_cplex_mat -ID:/programms/IB
 gcc ./src/singleGeneKO_cplex.c -m64 -g -o ./bin/win32/singleGeneKO_cplex -ID:/programms/IBM/ILOG/CPLEX_Studio126/cplex/include/ -I./include -ID:/programms/Matlab/R2017a/extern/include -LD:/programms/IBM/ILOG/CPLEX_Studio126/cplex/lib/x64_windows_vs2010/stat_mda -LD:/programms/Matlab/R2017a/bin/win64 -lmat -leng -lmx -lcplex1260 -lpthread -lm -O3
 
 gcc ./src/doubleGeneKO_cplex.c -m64 -g -o ./bin/win32/doubleGeneKO_cplex -ID:/programms/IBM/ILOG/CPLEX_Studio126/cplex/include/ -I./include -ID:/programms/Matlab/R2017a/extern/include -LD:/programms/IBM/ILOG/CPLEX_Studio126/cplex/lib/x64_windows_vs2010/stat_mda -LD:/programms/Matlab/R2017a/bin/win64 -lmat -leng -lmx -lcplex1260 -lpthread -lm -O3
+
+gcc ./src/singleGeneKI_cplex.c -m64 -g -o ./bin/win32/singleGeneKI_cplex -ID:/programms/IBM/ILOG/CPLEX_Studio126/cplex/include/ -I./include -ID:/programms/Matlab/R2017a/extern/include -LD:/programms/IBM/ILOG/CPLEX_Studio126/cplex/lib/x64_windows_vs2010/stat_mda -LD:/programms/Matlab/R2017a/bin/win64 -lmat -leng -lmx -lcplex1260 -lpthread -lm -O3

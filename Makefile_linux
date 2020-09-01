@@ -19,3 +19,7 @@ gcc ./src/singleGeneKI_gurobi.c -m64 -g -o ./bin/linux64/singleGeneKI_gurobi -I/
 gcc ./src/singleMetKO_gurobi.c -m64 -g -o ./bin/linux64/singleMetKO_gurobi -I/home/ligh/soft/gurobi605/linux64/include  -I./include -L/home/ligh/soft/gurobi605/linux64/lib -lm -lgurobi60 -lpthread -O3
 gcc ./src/doubleMetKO_gurobi.c -m64 -g -o ./bin/linux64/doubleMetKO_gurobi -I/home/ligh/soft/gurobi605/linux64/include  -I./include -L/home/ligh/soft/gurobi605/linux64/lib -lm -lgurobi60 -lpthread -O3
 
+# cplex linux
+
+
+
