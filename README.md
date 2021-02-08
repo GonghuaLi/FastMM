@@ -26,11 +26,11 @@ Li, G., Dai, S., Han, F. et al. FastMM: an efficient toolbox for personalized co
 
 **1).** Install MATLAB. MATLAB is the software environment for engineers and scientists. You can get detailed installation information by visiting http://www.mathworks.com/products/matlab/
 
-**2).** Install Cobra toolbox in Matlab.  Cobra toolbox is a matlab toolbox that used to implement metabolic modeling. Users can download and install this toolbox from:  https://opencobra.github.io/cobratoolbox/
+**2).** Optional: Install Cobra toolbox in Matlab.  Cobra toolbox is a matlab toolbox that used to implement metabolic modeling. Users can download and install this toolbox from:  https://opencobra.github.io/cobratoolbox/
 
-**3).** Install Gurobi optimizer MATLAB interface. Please download and install the latest Gurobi optimizer and set MATLAB interface. Users can download and install this toolbox from:  https://www.gurobi.com/
+**3).** Optional(recommand): Install Gurobi optimizer MATLAB interface. Please download and install the latest Gurobi optimizer and set MATLAB interface. Users can download and install this toolbox from:  https://www.gurobi.com/
 
-**4).** Install Cplex optimizer MATLAB interface. Users can download the cplex from http://www-01.ibm.com/software/websphere/products/optimization/cplex-studio-community-edition/
+**4).** Optional(recommand): Install Cplex optimizer MATLAB interface. Users can download the cplex from http://www-01.ibm.com/software/websphere/products/optimization/cplex-studio-community-edition/
 
 
 ## Installation
