@@ -1,5 +1,5 @@
-%% FastMM for personalized modeling: example for modeling lung cancer
-% read paramaters and setenv
+%% FastMM for modeling lung cancer
+% step 1: read paramaters and setenv
 addpath('./bin');
 addpath(genpath('./bin/extern'))
 binpath = which('FastMM_FVA.m');
@@ -12,6 +12,7 @@ if isempty(strfind(getenv('PATH'),binpath))
     end
 end
 pars = parse_parsfile('./pars.txt');
+pars.expressionFile = './data/TCGA_lung.txt';%lung cancer expression
 load(pars.consModel);
 consmodel = model;
 %% using cplex here for fastcore
@@ -38,7 +39,7 @@ GeneKOout = FastMM_singleGeneKO_multi(consmodel,fastcoreModel,pars.numCPU);
 %% single metebolite knockout analysis
 MetKOout = FastMM_singleMetKO_multi(consmodel,fastcoreModel,pars.numCPU);
 
-%%  double metabolic knockout: this will spend much time
+%%  double metabolic KO: this will spend much time
 %GeneKOout = FastMM_doubleMetKO_multi(consmodel,fastcoreModel,pars.numCPU);
 
 
@@ -51,7 +52,7 @@ for i =1:length(GeneKOout)
     KOout(:,i) = GeneKOout{i}(2:end,3);
 end
 writetxt(['genes',modelnames;[consmodel.genes,num2cellstr(KOout)]],'./out/singleGeneKO.txt','\t');
-
+%%
 %write MetKO
 writetxt(['Mets',modelnames;[consmodel.mets,num2cellstr(MetKOout)]],'./out/singleMetKO.txt','\t');
 

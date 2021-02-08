@@ -1,17 +1,16 @@
-function flux = FastMM_FVA(model,varargin)
+function flux = FastMM_FVA(model,solver,varargin)
 t = clock;
 c = ['fva',num2str(ceil(rand(1,1)*1000)),num2str(ceil(t(6)*100))];
 cout = [c,'.txt'];
 
 isobj = 0;
 iscons = 0;
-global CBTLPSOLVER
-if strcmp(CBTLPSOLVER,'gurobi5')
+if strcmp(solver,'gurobi5')
     programm_name = 'FVA_gurobi';
     disp('FastMM_FVA: using gurobi 5 solver');
     flux = FastMM_FVA_gurobi5(model);
     return;
-elseif strcmp(CBTLPSOLVER,'cplex')
+elseif strcmp(solver,'cplex')
     disp('FastMM_FVA: using cplex  solver');
     flux = FastMM_FVA_cplex(model);
     return;

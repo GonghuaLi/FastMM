@@ -1,8 +1,7 @@
-function GeneKOout = FastMM_singleGeneKO_multi(inmodel,rxnsmatrix,numcpu,varargin)
+function output = FastMM_singleMetKO_multi(inmodel,rxnsmatrix,numcpu,varargin)
 consmodel = inmodel;
 matrix = logical(rxnsmatrix);
 N_samples = size(matrix,2);
-N_gene = length(consmodel.genes);
 GeneKOout = {};
 outmodels = {};
 
@@ -59,13 +58,13 @@ global CBTLPSOLVER
 thesolver = CBTLPSOLVER;
 if isobj == 0
     parfor i = 1:N_samples
-        GeneKOout_tmp = FastMM_singleGeneKO_par(outmodels{i},thesolver);
+        GeneKOout_tmp = FastMM_singleMetKO_par(outmodels{i},thesolver);
         %GeneKOout(:,i+2) = GeneKOout_tmp(:,3);
         GeneKOout{i} = GeneKOout_tmp;
     end
 else
     parfor i = 1:N_samples
-        GeneKOout_tmp = FastMM_singleGeneKO_par(outmodels{i},thesolver);
+        GeneKOout_tmp = FastMM_singleMetKO_par(outmodels{i},thesolver);
         %GeneKOout(:,i+2) = GeneKOout_tmp(:,3);
         GeneKOout{i} = [GeneKOout_tmp(:,1:2),GeneKOout_tmp(:,ib+2)];
     end
@@ -73,3 +72,12 @@ end
     
 %matlabpool close;
 delete(gcp('nocreate'));
+
+%%
+output = GeneKOout{1}(1,3)*ones(length(consmodel.mets),N_samples);
+for i = 1:N_samples
+    tmp = GeneKOout{i}(2:end,3);
+    [ia,ib] = ismember(consmodel.mets,outmodels{i}.mets);
+    ib = ib(ia);
+    output(ia,i) = tmp(ib,:);
+end

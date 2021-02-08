@@ -6,6 +6,7 @@ exchangeFile = './data/exchange_rxns_blood_muscle.txt';
 
 # expression file
 expressionFile = './data/TCGA_lung_test.txt';
+# expressionFile = './data/TCGA_lung.txt';
 
 # cutoff expression
 cutoff = '75';

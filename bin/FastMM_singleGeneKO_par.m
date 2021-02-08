@@ -1,26 +1,34 @@
-function flux = FastMM_FVA(model,varargin)
+function flux = FastMM_singleGeneKO_par(model,thesolver,varargin)
 t = clock;
-c = ['fva',num2str(ceil(rand(1,1)*1000)),num2str(ceil(t(6)*100))];
+c = ['singleGeneKO',num2str(ceil(rand(1,1)*1000)),num2str(ceil(t(6)*100))];
 cout = [c,'.txt'];
-
+a = cobra2FastKO(model,c);
 isobj = 0;
 iscons = 0;
-global CBTLPSOLVER
-if strcmp(CBTLPSOLVER,'gurobi5')
-    programm_name = 'FVA_gurobi';
-    disp('FastMM_FVA: using gurobi 5 solver');
-    flux = FastMM_FVA_gurobi5(model);
-    return;
-elseif strcmp(CBTLPSOLVER,'cplex')
-    disp('FastMM_FVA: using cplex  solver');
-    flux = FastMM_FVA_cplex(model);
-    return;
+is_e = 0;
+if sum(model.c >0) ==1
+   sol = optimizeCbModel_par(model,thesolver,'max','one');
+   effectrxns = abs(sol.x)>1e-9;
+   eout = [c,'eff.txt'];
+   writetxt(num2cellstr(effectrxns),eout,'\t');
+   is_e = 1;
+end
+if strcmp(thesolver,'gurobi5')
+    if is_e==1
+        programm_name = ['singleGeneKO_gurobi -e ',eout];
+    else
+        programm_name = 'singleGeneKO_gurobi';
+    end
+    disp('FastMM_singleGeneKO: using gurobi  solver');
 else
-    programm_name = 'FVA';
-    warning('FastMM_FVA: using glpk solver');
+    if is_e==1
+        programm_name = ['singleGeneKO -e ',eout];
+    else
+        programm_name = 'singleGeneKO';
+    end
+    warning('FastMM_singleGeneKO: using glpk solver');
 end
 
-a = cobra2FastKO(model,c);    
 if isempty(varargin)
     system([programm_name,' -m ',c,' -t max -o ',cout]);
 else
@@ -63,8 +71,10 @@ end
 if iscons==1
     delete(cons);
 end
+if is_e == 1
+    delete(eout);
+end
 flux = file2cell(cout,'\t');
 flux = cell2float(flux);
-
 delete(cout);
 rmdir(c,'s');
