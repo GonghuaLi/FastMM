@@ -1,0 +1,49 @@
+
+Log for 'CPLEX' Clone_1 (V12.6.0.0) Tue Jul 03 11:42:10 2018
+
+Tried aggregator 0 times.
+No LP presolve or aggregator reductions.
+Presolve time = 0.00 sec. (0.74 ticks)
+Parallel mode: using up to 7 threads for barrier.
+Number of nonzeros in lower triangle of A*A' = 8138
+Using Approximate Minimum Degree ordering
+Total time for automatic ordering = 0.00 sec. (1.79 ticks)
+Summary statistics for Cholesky factor:
+  Threads                   = 7
+  Rows in Factor            = 774
+  Integer space required    = 4400
+  Total non-zeros in factor = 23002
+  Total FP ops to factor    = 1431040
+ Itn      Primal Obj        Dual Obj  Prim Inf Upper Inf  Dual Inf Inf Ratio
+   0  1.8040242e+002 -1.6718871e+006 4.10e+005 2.19e+005 5.50e+001 1.00e+000
+   1  1.7352434e+002 -1.0366143e+006 3.89e+005 2.07e+005 3.41e+001 1.84e-002
+Barrier time = 0.00 sec. (5.11 ticks)
+
+Dual simplex solved model.
+
+
+Log for 'CPLEX' Clone_1 (V12.6.0.0) Tue Jul 03 11:43:07 2018
+
+Tried aggregator 0 times.
+No LP presolve or aggregator reductions.
+Presolve time = 0.00 sec. (0.74 ticks)
+Parallel mode: using up to 7 threads for barrier.
+Number of nonzeros in lower triangle of A*A' = 8138
+Using Approximate Minimum Degree ordering
+Total time for automatic ordering = 0.00 sec. (1.79 ticks)
+Summary statistics for Cholesky factor:
+  Threads                   = 7
+  Rows in Factor            = 774
+  Integer space required    = 4400
+  Total non-zeros in factor = 23002
+  Total FP ops to factor    = 1431040
+ Itn      Primal Obj        Dual Obj  Prim Inf Upper Inf  Dual Inf Inf Ratio
+   0 -1.8040242e+002 -1.6718871e+006 4.10e+005 2.19e+005 5.50e+001 1.00e+000
+   1 -1.7466104e+002 -1.0367007e+006 3.89e+005 2.07e+005 3.41e+001 1.84e-002
+   2 -1.2639293e+002 -9.4514687e+005 2.45e+005 1.30e+005 3.11e+001 1.71e-002
+   3 -3.1230634e+001 -2.4208256e+005 5.35e+004 2.85e+004 7.96e+000 4.93e-002
+ Barrier aborted.
+Barrier time = 0.00 sec. (6.36 ticks)
+
+Dual simplex solved model.
+
