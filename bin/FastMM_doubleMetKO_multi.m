@@ -7,10 +7,13 @@ MetKOout = zeros(N_Mets*(N_Mets-1)/2+N_Mets+1,N_samples+2);
 outmodels = {};
 for i = 1:N_samples
     rmrxns = consmodel.rxns(~matrix(:,i));
-    outmodel = removeRxns(consmodel,rmrxns);
+    %outmodela = removeRxns(consmodel,rmrxns);
     %outmodel.c = zeros(length(outmodel.rxns),1);
     %outmodel.c(findRxnIDs(outmodel,'biomass_reaction')) = 1;
-    outmodels{i} = outmodel;
+    outmodela = consmodel;
+    outmodela.lb(~matrix(:,i)) = 0;
+    outmodela.ub(~matrix(:,i)) = 0;
+    outmodels{i} = outmodela;
 end
 
 %% multiple threading double gene knockout
